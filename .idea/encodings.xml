@@ -4,9 +4,9 @@
     <file url="file://$PROJECT_DIR$/app/src/main/assets/vertex_earth.sh" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/assets/vertex_moon.sh" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/assets/vertex_moon.sh" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/Earth.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/Moon.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/MySurfaceView.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/MySurfaceView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/domain/Earth.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/bruce/earth/domain/Moon.java" charset="UTF-8" />
   </component>
 </project>

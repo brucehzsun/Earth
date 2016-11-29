@@ -8,6 +8,9 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.view.MotionEvent;
 
+import com.example.bruce.earth.domain.Celestial;
+import com.example.bruce.earth.domain.Earth;
+import com.example.bruce.earth.domain.Moon;
 import com.example.bruce.earth.util.Constant;
 import com.example.bruce.earth.util.MatrixState;
 
@@ -17,9 +20,7 @@ import java.io.InputStream;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-class MySurfaceView extends GLSurfaceView {
-    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;//角度缩放比例
-    private SceneRenderer mRenderer;//场景渲染器
+public class MySurfaceView extends GLSurfaceView {
 
     private float mPreviousX;//上次的触控位置X坐标
     private float mPreviousY;//上次的触控位置Y坐标
@@ -37,7 +38,7 @@ class MySurfaceView extends GLSurfaceView {
     public MySurfaceView(Context context) {
         super(context);
         this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
-        mRenderer = new SceneRenderer();    //创建场景渲染器
+        SceneRenderer mRenderer = new SceneRenderer();
         setRenderer(mRenderer);                //设置渲染器
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);//设置渲染模式为主动渲染
     }
@@ -51,6 +52,7 @@ class MySurfaceView extends GLSurfaceView {
             case MotionEvent.ACTION_MOVE:
                 //触控横向位移太阳绕y轴旋转
                 float dx = x - mPreviousX;//计算触控笔X位移
+                float TOUCH_SCALE_FACTOR = 180.0f / 320;
                 yAngle += dx * TOUCH_SCALE_FACTOR;//设置太阳绕y轴旋转的角度
                 float sunx = (float) (Math.cos(Math.toRadians(yAngle)) * 100);
                 float sunz = -(float) (Math.sin(Math.toRadians(yAngle)) * 100);
@@ -81,36 +83,27 @@ class MySurfaceView extends GLSurfaceView {
         Celestial cSmall;//小星星天球
         Celestial cBig;//大星星天球
 
-        public void onDrawFrame(GL10 gl) {
-            //清除深度缓冲与颜色缓冲
-            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-
-            //保护现场
-            MatrixState.pushMatrix();
-            //地球自转
-            MatrixState.rotate(eAngle, 0, 1, 0);
-            //绘制纹理圆球
-            earth.drawSelf(textureIdEarth, textureIdEarthNight);
-            //推坐标系到月球位置            
-            MatrixState.transtate(2f, 0, 0);
-            //月球自转     
-            MatrixState.rotate(eAngle, 0, 1, 0);
-            //绘制月球
-            moon.drawSelf(textureIdMoon);
-            //恢复现场
-            MatrixState.popMatrix();
-
-            //保护现场
-            MatrixState.pushMatrix();
-            MatrixState.rotate(cAngle, 0, 1, 0);
-            cSmall.drawSelf();
-            cBig.drawSelf();
-            //恢复现场
-            MatrixState.popMatrix();
+        @Override
+        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+            //设置屏幕背景色RGBA
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            //创建地球对象
+            earth = new Earth(MySurfaceView.this, 2.0f);
+            //创建月球对象
+            moon = new Moon(MySurfaceView.this, 1.0f);
+            //创建小星星天球对象
+            cSmall = new Celestial(getContext(), 1, 0, 10000);
+            //创建大星星天球对象
+            cBig = new Celestial(getContext(), 2, 0, 5000);
+            //打开深度检测
+            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+            //初始化变换矩阵
+            MatrixState.setInitStack();
         }
 
+        @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            //设置视窗大小及位置 
+            //设置视窗大小及位置
             GLES20.glViewport(0, 0, width, height);
             //计算GLSurfaceView的宽高比
             Constant.ratio = (float) width / height;
@@ -145,26 +138,39 @@ class MySurfaceView extends GLSurfaceView {
             }.start();
         }
 
-        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            //设置屏幕背景色RGBA
-            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            //创建地球对象 
-            earth = new Earth(MySurfaceView.this, 2.0f);
-            //创建月球对象 
-            moon = new Moon(MySurfaceView.this, 1.0f);
-            //创建小星星天球对象
-            cSmall = new Celestial(getContext(), 1, 0, 1000);
-            //创建大星星天球对象
-            cBig = new Celestial(getContext(), 2, 0, 500);
-            //打开深度检测
-            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-            //初始化变换矩阵
-            MatrixState.setInitStack();
+        @Override
+        public void onDrawFrame(GL10 gl) {
+            //清除深度缓冲与颜色缓冲
+            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+            //保护现场
+            MatrixState.pushMatrix();
+            //地球自转
+            MatrixState.rotate(eAngle, 0, 1, 0);
+            //绘制纹理圆球
+            earth.drawSelf(textureIdEarth, textureIdEarthNight);
+            //推坐标系到月球位置            
+            MatrixState.transtate(2f, 0, 0);
+            //月球自转     
+            MatrixState.rotate(eAngle, 0, 1, 0);
+            //绘制月球
+            moon.drawSelf(textureIdMoon);
+            //恢复现场
+            MatrixState.popMatrix();
+
+            //保护现场
+            MatrixState.pushMatrix();
+            MatrixState.rotate(cAngle, 0, 1, 0);
+            cSmall.drawSelf();
+            cBig.drawSelf();
+            //恢复现场
+            MatrixState.popMatrix();
         }
+
+
     }
 
-    public int initTexture(int drawableId)//textureId
-    {
+    private int initTexture(int drawableId) {
         //生成纹理ID
         int[] textures = new int[1];
         GLES20.glGenTextures
