@@ -51,26 +51,26 @@ public class MySurfaceView extends GLSurfaceView {
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 //触控横向位移太阳绕y轴旋转
-                float dx = x - mPreviousX;//计算触控笔X位移
-                float TOUCH_SCALE_FACTOR = 180.0f / 320;
-                yAngle += dx * TOUCH_SCALE_FACTOR;//设置太阳绕y轴旋转的角度
-                float sunx = (float) (Math.cos(Math.toRadians(yAngle)) * 100);
-                float sunz = -(float) (Math.sin(Math.toRadians(yAngle)) * 100);
-                MatrixState.setLightLocationSun(sunx, 5, sunz);
-
-                //触控纵向位移摄像机绕x轴旋转 -90～+90
-                float dy = y - mPreviousY;//计算触控笔Y位移
-                xAngle += dy * TOUCH_SCALE_FACTOR;//设置太阳绕y轴旋转的角度
-                if (xAngle > 90) {
-                    xAngle = 90;
-                } else if (xAngle < -90) {
-                    xAngle = -90;
-                }
-                float cy = (float) (7.2 * Math.sin(Math.toRadians(xAngle)));
-                float cz = (float) (7.2 * Math.cos(Math.toRadians(xAngle)));
-                float upy = (float) Math.cos(Math.toRadians(xAngle));
-                float upz = -(float) Math.sin(Math.toRadians(xAngle));
-                MatrixState.setCamera(0, cy, cz, 0, 0, 0, 0, upy, upz);
+//                float dx = x - mPreviousX;//计算触控笔X位移
+//                float TOUCH_SCALE_FACTOR = 180.0f / 320;
+//                yAngle += dx * TOUCH_SCALE_FACTOR;//设置太阳绕y轴旋转的角度
+//                float sunx = (float) (Math.cos(Math.toRadians(yAngle)) * 100);
+//                float sunz = -(float) (Math.sin(Math.toRadians(yAngle)) * 100);
+//                MatrixState.setLightLocationSun(sunx, 5, sunz);
+//
+//                //触控纵向位移摄像机绕x轴旋转 -90～+90
+//                float dy = y - mPreviousY;//计算触控笔Y位移
+//                xAngle += dy * TOUCH_SCALE_FACTOR;//设置太阳绕y轴旋转的角度
+//                if (xAngle > 90) {
+//                    xAngle = 90;
+//                } else if (xAngle < -90) {
+//                    xAngle = -90;
+//                }
+//                float cy = (float) (7.2 * Math.sin(Math.toRadians(xAngle)));
+//                float cz = (float) (7.2 * Math.cos(Math.toRadians(xAngle)));
+//                float upy = (float) Math.cos(Math.toRadians(xAngle));
+//                float upz = -(float) Math.sin(Math.toRadians(xAngle));
+//                MatrixState.setCamera(0, cy, cz, 0, 0, 0, 0, upy, upz);
         }
         mPreviousX = x;//记录触控笔位置
         mPreviousY = y;
@@ -78,8 +78,8 @@ public class MySurfaceView extends GLSurfaceView {
     }
 
     private class SceneRenderer implements GLSurfaceView.Renderer {
-        Earth earth;//地球
-        Moon moon;//月球
+        //        Earth earth;//地球
+//        Moon moon;//月球
         Celestial cSmall;//小星星天球
         Celestial cBig;//大星星天球
 
@@ -88,13 +88,13 @@ public class MySurfaceView extends GLSurfaceView {
             //设置屏幕背景色RGBA
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             //创建地球对象
-            earth = new Earth(MySurfaceView.this, 2.0f);
+//            earth = new Earth(MySurfaceView.this, 2.0f);
             //创建月球对象
-            moon = new Moon(MySurfaceView.this, 1.0f);
+//            moon = new Moon(MySurfaceView.this, 1.0f);
             //创建小星星天球对象
             cSmall = new Celestial(getContext(), 1, 0, 10000);
             //创建大星星天球对象
-            cBig = new Celestial(getContext(), 2, 0, 5000);
+            cBig = new Celestial(getContext(), 3, 0, 5000);
             //打开深度检测
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
             //初始化变换矩阵
@@ -143,24 +143,25 @@ public class MySurfaceView extends GLSurfaceView {
             //清除深度缓冲与颜色缓冲
             GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
-            //保护现场
-            MatrixState.pushMatrix();
-            //地球自转
-            MatrixState.rotate(eAngle, 0, 1, 0);
-            //绘制纹理圆球
-            earth.drawSelf(textureIdEarth, textureIdEarthNight);
-            //推坐标系到月球位置            
-            MatrixState.transtate(2f, 0, 0);
-            //月球自转     
-            MatrixState.rotate(eAngle, 0, 1, 0);
-            //绘制月球
-            moon.drawSelf(textureIdMoon);
-            //恢复现场
-            MatrixState.popMatrix();
+//            //保护现场
+//            MatrixState.pushMatrix();
+//            //地球自转
+//            MatrixState.rotate(eAngle, 0, 1, 0);
+//            //绘制纹理圆球
+//            earth.drawSelf(textureIdEarth, textureIdEarthNight);
+//            //推坐标系到月球位置
+//            MatrixState.transtate(2f, 0, 0);
+//            //月球自转
+//            MatrixState.rotate(eAngle, 0, 1, 0);
+//            //绘制月球
+//            moon.drawSelf(textureIdMoon);
+//            //恢复现场
+//            MatrixState.popMatrix();
 
             //保护现场
             MatrixState.pushMatrix();
-            MatrixState.rotate(cAngle, 0, 1, 0);
+            MatrixState.rotate(cAngle/5, 0, 1, 0);
+            MatrixState.rotate(90, 1, 0, 0);
             cSmall.drawSelf();
             cBig.drawSelf();
             //恢复现场
