@@ -78,8 +78,8 @@ public class MySurfaceView extends GLSurfaceView {
     }
 
     private class SceneRenderer implements GLSurfaceView.Renderer {
-        //        Earth earth;//地球
-//        Moon moon;//月球
+        Earth earth;//地球
+        //        Moon moon;//月球
         Celestial cSmall;//小星星天球
         Celestial cBig;//大星星天球
 
@@ -88,7 +88,7 @@ public class MySurfaceView extends GLSurfaceView {
             //设置屏幕背景色RGBA
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             //创建地球对象
-//            earth = new Earth(MySurfaceView.this, 2.0f);
+            earth = new Earth(MySurfaceView.this, 2.0f);
             //创建月球对象
 //            moon = new Moon(MySurfaceView.this, 1.0f);
             //创建小星星天球对象
@@ -144,11 +144,12 @@ public class MySurfaceView extends GLSurfaceView {
             GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
 //            //保护现场
-//            MatrixState.pushMatrix();
+            MatrixState.pushMatrix();
 //            //地球自转
-//            MatrixState.rotate(eAngle, 0, 1, 0);
+            MatrixState.rotate(eAngle, 0, 1, 0);
+            MatrixState.rotate(-90, 1, 0, 0);
 //            //绘制纹理圆球
-//            earth.drawSelf(textureIdEarth, textureIdEarthNight);
+            earth.drawSelf(textureIdEarth, textureIdEarthNight);
 //            //推坐标系到月球位置
 //            MatrixState.transtate(2f, 0, 0);
 //            //月球自转
@@ -156,11 +157,11 @@ public class MySurfaceView extends GLSurfaceView {
 //            //绘制月球
 //            moon.drawSelf(textureIdMoon);
 //            //恢复现场
-//            MatrixState.popMatrix();
+            MatrixState.popMatrix();
 
             //保护现场
             MatrixState.pushMatrix();
-            MatrixState.rotate(cAngle/5, 0, 1, 0);
+            MatrixState.rotate(cAngle / 5, 0, 1, 0);
             MatrixState.rotate(90, 1, 0, 0);
             cSmall.drawSelf();
             cBig.drawSelf();
