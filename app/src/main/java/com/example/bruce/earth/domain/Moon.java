@@ -41,27 +41,27 @@ public class Moon {
         final float angleSpan = 10f;//将球进行单位切分的角度
         for (float vAngle = 90; vAngle > -90; vAngle = vAngle - angleSpan)//垂直方向angleSpan度一份
         {
-            for (float hAngle = 360; hAngle > 0; hAngle = hAngle - angleSpan)//水平方向angleSpan度一份
+            for (float hAngle = 0; hAngle < 360; hAngle = hAngle + angleSpan)//水平方向angleSpan度一份
             {//纵向横向各到一个角度后计算对应的此点在球面上的坐标
                 double xozLength = r * UNIT_SIZE * Math.cos(Math.toRadians(vAngle));
                 float x1 = (float) (xozLength * Math.cos(Math.toRadians(hAngle)));
-                float z1 = (float) (xozLength * Math.sin(Math.toRadians(hAngle)));
-                float y1 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle)));
+                float y1 = (float) (xozLength * Math.sin(Math.toRadians(hAngle)));
+                float z1 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle)));
 
                 xozLength = r * UNIT_SIZE * Math.cos(Math.toRadians(vAngle - angleSpan));
                 float x2 = (float) (xozLength * Math.cos(Math.toRadians(hAngle)));
-                float z2 = (float) (xozLength * Math.sin(Math.toRadians(hAngle)));
-                float y2 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle - angleSpan)));
+                float y2 = (float) (xozLength * Math.sin(Math.toRadians(hAngle)));
+                float z2 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle - angleSpan)));
 
                 xozLength = r * UNIT_SIZE * Math.cos(Math.toRadians(vAngle - angleSpan));
-                float x3 = (float) (xozLength * Math.cos(Math.toRadians(hAngle - angleSpan)));
-                float z3 = (float) (xozLength * Math.sin(Math.toRadians(hAngle - angleSpan)));
-                float y3 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle - angleSpan)));
+                float x3 = (float) (xozLength * Math.cos(Math.toRadians(hAngle + angleSpan)));
+                float y3 = (float) (xozLength * Math.sin(Math.toRadians(hAngle + angleSpan)));
+                float z3 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle - angleSpan)));
 
                 xozLength = r * UNIT_SIZE * Math.cos(Math.toRadians(vAngle));
-                float x4 = (float) (xozLength * Math.cos(Math.toRadians(hAngle - angleSpan)));
-                float z4 = (float) (xozLength * Math.sin(Math.toRadians(hAngle - angleSpan)));
-                float y4 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle)));
+                float x4 = (float) (xozLength * Math.cos(Math.toRadians(hAngle + angleSpan)));
+                float y4 = (float) (xozLength * Math.sin(Math.toRadians(hAngle + angleSpan)));
+                float z4 = (float) (r * UNIT_SIZE * Math.sin(Math.toRadians(vAngle)));
 
                 //构建第一三角形
                 alVertix.add(x1);

@@ -79,7 +79,7 @@ public class MySurfaceView extends GLSurfaceView {
 
     private class SceneRenderer implements GLSurfaceView.Renderer {
         Earth earth;//地球
-        //        Moon moon;//月球
+                Moon moon;//月球
         Celestial cSmall;//小星星天球
         Celestial cBig;//大星星天球
 
@@ -90,7 +90,7 @@ public class MySurfaceView extends GLSurfaceView {
             //创建地球对象
             earth = new Earth(MySurfaceView.this, 2.0f);
             //创建月球对象
-//            moon = new Moon(MySurfaceView.this, 1.0f);
+            moon = new Moon(MySurfaceView.this, 1.0f);
             //创建小星星天球对象
             cSmall = new Celestial(getContext(), 1, 0, 10000);
             //创建大星星天球对象
@@ -150,12 +150,15 @@ public class MySurfaceView extends GLSurfaceView {
             MatrixState.rotate(-90, 1, 0, 0);
 //            //绘制纹理圆球
             earth.drawSelf(textureIdEarth, textureIdEarthNight);
+//            MatrixState.popMatrix();
+
+//            MatrixState.pushMatrix();
 //            //推坐标系到月球位置
-//            MatrixState.transtate(2f, 0, 0);
-//            //月球自转
+            MatrixState.transtate(2f, 0, 0);
 //            MatrixState.rotate(eAngle, 0, 1, 0);
+//            //月球自转
 //            //绘制月球
-//            moon.drawSelf(textureIdMoon);
+            moon.drawSelf(textureIdMoon);
 //            //恢复现场
             MatrixState.popMatrix();
 
